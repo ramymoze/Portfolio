@@ -9,11 +9,11 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "razagram",
-    title: "Razagram",
-    description: "A social media mobile application built with Expo and React Native. Features include a custom iOS development client and Supabase integration.",
-    tags: ["React Native", "Expo", "Supabase", "iOS"],
-    link: "https://github.com/ramymoze/razagram",
+    id: "fun-learning",
+    title: "FunLearning",
+    description: "An interactive educational platform designed to make learning engaging and fun. Features gamified lessons, progress tracking, and adaptive learning paths for an enhanced educational experience.",
+    tags: ["React Native", "Expo", "Supabase", "Education"],
+    link: "https://github.com/ramymoze/fun-learning",
     images: ["/projects/fun-learning.png"],
   },
   {
