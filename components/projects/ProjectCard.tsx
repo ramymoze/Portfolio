@@ -1,38 +1,33 @@
 "use client";
 
-import { motion, Variants } from "framer-motion";
+import { motion, useMotionTemplate, useMotionValue } from "framer-motion";
 import { ExternalLink, Github, ArrowRight, ArrowLeft } from "lucide-react";
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { cn } from "@/lib/utils";
 import { Project } from "@/data/projects";
-
-const cardVariants: Variants = {
-  hidden: { y: 20, opacity: 0 },
-  visible: {
-    y: 0,
-    opacity: 1,
-    transition: {
-      duration: 0.5,
-      ease: "easeOut",
-    },
-  },
-};
 
 interface ProjectCardProps {
     project: Project;
     index: number;
+    className?: string;
 }
 
-export function ProjectCard({ project, index }: ProjectCardProps) {
+export function ProjectCard({ project, index, className }: ProjectCardProps) {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
-  const [isHovered, setIsHovered] = useState(false);
   
+  // Spotlight Effect
+  const mouseX = useMotionValue(0);
+  const mouseY = useMotionValue(0);
+
+  const handleMouseMove = useCallback(({ currentTarget, clientX, clientY }: React.MouseEvent) => {
+    const { left, top } = currentTarget.getBoundingClientRect();
+    mouseX.set(clientX - left);
+    mouseY.set(clientY - top);
+  }, [mouseX, mouseY]);
+
   const hasImages = project.images && project.images.length > 0;
   const hasMultipleImages = project.images && project.images.length > 1;
 
-  // Mobile Detection logic
-  const isMobile = project.tags.some(tag => tag === "React Native" || tag === "Mobile App" || tag === "iOS");
-  
   const nextImage = (e: React.MouseEvent) => {
     e.preventDefault();
     e.stopPropagation();
@@ -49,157 +44,146 @@ export function ProjectCard({ project, index }: ProjectCardProps) {
     }
   };
 
-  // Helper indices for 3-up view
-  const prevIndex = project.images ? (currentImageIndex - 1 + project.images.length) % project.images.length : 0;
-  const nextIndexFn = project.images ? (currentImageIndex + 1) % project.images.length : 0;
-
   return (
     <motion.div
-      variants={cardVariants}
-      className="group relative flex flex-col h-full bg-zinc-900/30 border border-white/5 rounded-2xl overflow-hidden hover:border-primary/50 hover:bg-zinc-900/50 transition-all duration-300 hover:shadow-2xl hover:shadow-primary/10 hover:-translate-y-1"
-      onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
-    >
-      {/* 1. Image Container */}
-      <div className="relative w-full aspect-[16/10] bg-black/50 overflow-hidden border-b border-white/5">
-         
-         {/* Background Styling */}
-         {isMobile ? (
-             <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-transparent to-purple-500/10" />
-         ) : (
-             <div className="absolute inset-0 bg-[radial-gradient(#ffffff05_1px,transparent_1px)] [background-size:16px_16px]" />
-         )}
-
-        {hasImages ? (
-          <div className="w-full h-full flex items-center justify-center p-6 relative overflow-hidden">
-            
-            {/* 3-UP VIEW FOR MOBILE (if multiple images) */}
-            {isMobile && hasMultipleImages ? (
-                <div className="flex items-center justify-center gap-4 w-full h-full">
-                    {/* Previous Image - Blurred & Smaller */}
-                    <div className="relative w-[30%] h-[80%] opacity-40 grayscale blur-[1px] transform scale-0 cursor-pointer md:scale-95 transition-all duration-500" onClick={prevImage}>
-                         <img 
-                            src={project.images![prevIndex]} 
-                            className="w-full h-full object-cover rounded-[1.5rem] border-[2px] border-[#1a1a1a]"
-                         />
-                    </div>
-                    
-                    {/* Current Image - Center Stage */}
-                    <div className="relative w-[45%] h-full z-10 transition-transform duration-500 group-hover:scale-105">
-                         <img 
-                            key={currentImageIndex}
-                            src={project.images![currentImageIndex]} 
-                            alt={project.title}
-                            className="w-full h-full object-cover rounded-[2rem] border-[4px] border-[#1a1a1a] shadow-2xl"
-                            style={{ filter: "drop-shadow(0 20px 40px rgba(0,0,0,0.7))" }}
-                         />
-                    </div>
-                    
-                    {/* Next Image - Blurred & Smaller */}
-                    <div className="relative w-[30%] h-[80%] opacity-40 grayscale blur-[1px] transform scale-0 cursor-pointer md:scale-95 transition-all duration-500" onClick={nextImage}>
-                         <img 
-                            src={project.images![nextIndexFn]} 
-                            className="w-full h-full object-cover rounded-[1.5rem] border-[2px] border-[#1a1a1a]"
-                         />
-                    </div>
-                </div>
-            ) : (
-                /* STANDARD SINGLE VIEW (Desktop or Mobile with 1 image) */
-                <img 
-                   key={currentImageIndex}
-                   src={project.images![currentImageIndex]} 
-                   alt={project.title}
-                   className={cn(
-                       "w-full h-full object-contain animate-fadeIn transition-transform duration-500 group-hover:scale-105",
-                       isMobile 
-                         ? "scale-95 rounded-[2rem] border-[4px] border-[#1a1a1a] shadow-xl drop-shadow-2xl" 
-                         : "drop-shadow-2xl"
-                   )}
-                   style={{ 
-                       filter: isMobile 
-                         ? "drop-shadow(0 20px 40px rgba(0,0,0,0.6))" 
-                         : "drop-shadow(0 10px 20px rgba(0,0,0,0.5))"
-                   }}
-                />
-            )}
-
-            {/* CONTROL BAR - Bottom Right */}
-            {hasMultipleImages && (
-                <div className="absolute bottom-3 right-3 z-20 flex items-center gap-1 p-1 pl-2 bg-black/80 border border-white/10 backdrop-blur-md rounded-full shadow-lg">
-                    {/* Counter */}
-                    <span className="text-[10px] font-mono text-white/50 mr-1 select-none">
-                        {currentImageIndex + 1}/{project.images!.length}
-                    </span>
-                    
-                    {/* Divider */}
-                    <div className="w-[1px] h-3 bg-white/10" />
-
-                    {/* Buttons */}
-                    <button 
-                         onClick={prevImage}
-                         className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors active:scale-90"
-                         title="Previous"
-                    >
-                         <ArrowLeft size={12} />
-                    </button>
-                    <button 
-                         onClick={nextImage}
-                         className="p-1.5 rounded-full hover:bg-white/10 text-white/70 hover:text-white transition-colors active:scale-90"
-                         title="Next"
-                    >
-                         <ArrowRight size={12} />
-                    </button>
-                </div>
-            )}
-            
-            {/* Mobile Tap Areas (Backup for easy touch) */}
-            <div className="md:hidden absolute inset-0 flex z-10">
-                <div className="w-1/3 h-full" onClick={prevImage} />
-                <div className="w-1/3 h-full" />
-                <div className="w-1/3 h-full" onClick={nextImage} />
-            </div>
-
-          </div>
-        ) : (
-          <div className="w-full h-full flex flex-col items-center justify-center text-white/10 gap-2">
-            <Github size={40} />
-             <span className="text-[10px] uppercase font-mono tracking-widest">No Preview</span>
-          </div>
+        initial={{ opacity: 0, y: 20 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5, delay: index * 0.1 }}
+        viewport={{ once: true, margin: "-50px" }}
+        className={cn(
+            "group relative flex flex-col overflow-hidden rounded-3xl bg-zinc-900/50 border border-white/10",
+            className
         )}
+        onMouseMove={handleMouseMove}
+    >
+      {/* Spotlight Overlay */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 z-30"
+        style={{
+          background: useMotionTemplate`
+            radial-gradient(
+              650px circle at ${mouseX}px ${mouseY}px,
+              rgba(255, 255, 255, 0.1),
+              transparent 80%
+            )
+          `,
+        }}
+      />
+      
+      {/* Spotlight Border */}
+      <motion.div
+        className="pointer-events-none absolute -inset-px rounded-3xl opacity-0 transition duration-300 group-hover:opacity-100 z-30"
+        style={{
+            background: useMotionTemplate`
+            radial-gradient(
+                650px circle at ${mouseX}px ${mouseY}px,
+                rgba(139, 92, 246, 0.3),
+                transparent 80%
+            )
+            `,
+        }}
+       />
+
+      {/* FULL BLEED IMAGE BACKGROUND */}
+      <div className="absolute inset-0 z-0 bg-[#050505]">
+         {hasImages ? (
+             <>
+                <motion.img 
+                    key={currentImageIndex}
+                    src={project.images![currentImageIndex]} 
+                    alt={project.title}
+                    initial={{ scale: 1, filter: "blur(0px)" }}
+                    whileHover={{ scale: 1.05 }}
+                    transition={{ duration: 0.7 }}
+                    className={cn(
+                        "w-full h-full transition-transform duration-700",
+                        project.id === "droply-app" 
+                            ? "object-cover" 
+                            : "object-contain p-6 bg-[#0a0a0a]"
+                    )}
+                />
+                
+                {/* Image Navigation REMOVED from here */
+                /* Navigation moved to root for z-index fixing */ }
+             </>
+         ) : (
+            <div className="w-full h-full flex items-center justify-center bg-zinc-900">
+                 <Github className="text-white/10 w-20 h-20" />
+            </div>
+         )}
+         
+         {/* GRADIENT OVERLAY FOR TEXT READABILITY */}
+         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent z-10" />
       </div>
 
-      {/* 2. Content Area */}
-      <div className="flex-1 p-6 flex flex-col">
-        <div className="flex justify-between items-start mb-4">
-          <h3 className="text-xl font-bold text-white group-hover:text-primary transition-colors">
-            {project.title}
-          </h3>
-          <a 
-            href={project.link} 
-            target="_blank" 
-            rel="noopener noreferrer"
-            className="text-white/30 hover:text-white transition-colors"
-          >
-            <ExternalLink size={18} />
-          </a>
+      {/* CONTENT - Positioned at bottom */}
+      <div className="relative z-20 mt-auto p-6 flex flex-col h-full justify-end transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500">
+        
+        {/* Top-Right Link (Always visible but subtle) */}
+        <div className="absolute top-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity duration-500 translate-x-4 group-hover:translate-x-0">
+             <a 
+                href={project.link} 
+                target="_blank" 
+                rel="noopener noreferrer"
+                className="p-2 flex items-center justify-center rounded-full bg-white/20 backdrop-blur-md border border-white/10 text-white hover:bg-white hover:text-black transition-all"
+             >
+                <ExternalLink size={18} />
+             </a>
         </div>
 
-        <p className="text-gray-400 text-sm leading-relaxed mb-6 line-clamp-3">
-          {project.description}
-        </p>
+        <div className="space-y-3">
+             {/* Title */}
+             <h3 className="text-2xl font-bold text-white tracking-tight drop-shadow-md">
+                {project.title}
+             </h3>
 
-        {/* Tags */}
-        <div className="mt-auto flex flex-wrap gap-2">
-          {project.tags.slice(0, 4).map((tag, i) => (
-            <span 
-              key={i} 
-              className="px-2.5 py-1 rounded-md bg-white/5 text-[11px] font-medium text-white/60 border border-white/5 group-hover:border-primary/20 transition-colors"
+             {/* Description - Slides up and fades in */}
+             <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-[grid-template-rows] duration-500 ease-out">
+                 <div className="overflow-hidden">
+                     <p className="text-zinc-300 text-sm leading-relaxed mb-4 line-clamp-3">
+                        {project.description}
+                     </p>
+                     
+                     {/* Tags */}
+                     <div className="flex flex-wrap gap-2 pb-1">
+                        {project.tags.slice(0, 3).map((tag, i) => (
+                            <span 
+                            key={i} 
+                            className="px-2.5 py-1 rounded-full bg-white/10 backdrop-blur-sm text-[11px] font-medium text-white/90 border border-white/5"
+                            >
+                            {tag}
+                            </span>
+                        ))}
+                    </div>
+                 </div>
+             </div>
+             
+             {/* Brief Subtitle (Visible when not hovering/collapsed) */}
+             <div className="group-hover:opacity-0 transition-opacity duration-300 absolute bottom-6 left-6">
+                <p className="text-zinc-400 text-xs font-medium uppercase tracking-wider">
+                    {project.tags[0]} • {project.tags[1]}
+                </p>
+             </div>
+        </div>
+      </div>
+
+      {/* Image Navigation (Moved here for z-index stacking) */}
+      {hasMultipleImages && (
+        <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 flex justify-between px-4 opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-50 pointer-events-none">
+            <button 
+                    onClick={prevImage}
+                    className="p-2 rounded-full bg-black/50 border border-white/10 text-white backdrop-blur-md hover:bg-white/20 transition-all pointer-events-auto"
             >
-              #{tag}
-            </span>
-          ))}
+                    <ArrowLeft size={16} />
+            </button>
+            <button 
+                    onClick={nextImage}
+                    className="p-2 rounded-full bg-black/50 border border-white/10 text-white backdrop-blur-md hover:bg-white/20 transition-all pointer-events-auto"
+            >
+                    <ArrowRight size={16} />
+            </button>
         </div>
-      </div>
+      )}
     </motion.div>
   );
 }

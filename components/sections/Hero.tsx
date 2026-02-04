@@ -22,34 +22,63 @@ export function Hero() {
           className="text-left"
         >
           {personalInfo.availableForHire && (
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-wider uppercase mb-8">
-              <span className="w-2 h-2 rounded-full bg-primary animate-pulse" />
+            <motion.div 
+              initial={{ scale: 0, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              transition={{ duration: 0.5, delay: 0.4, type: "spring", stiffness: 200 }}
+              className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-primary/10 border border-primary/20 text-primary text-xs font-bold tracking-wider uppercase mb-8"
+            >
+              <motion.span 
+                animate={{ scale: [1, 1.2, 1] }}
+                transition={{ duration: 2, repeat: Infinity }}
+                className="w-2 h-2 rounded-full bg-primary"
+              />
               Available for hire
-            </div>
+            </motion.div>
           )}
           
-          <h1 className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight">
+          <motion.h1 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.5 }}
+            className="text-5xl md:text-7xl font-bold text-white mb-6 leading-tight"
+          >
             Architecting <br />
             <span className="text-primary">{personalInfo.tagline.split(' ').pop()}</span>
-          </h1>
+          </motion.h1>
           
-          <p className="text-gray-400 text-lg md:text-xl mb-10 max-w-lg leading-relaxed">
+          <motion.p 
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 0.7 }}
+            className="text-gray-400 text-lg md:text-xl mb-10 max-w-lg leading-relaxed"
+          >
             {personalInfo.description}
-          </p>
+          </motion.p>
           
           <div className="flex flex-wrap gap-4">
-            <a
+            <motion.a
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 0.9 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
               href="#projects"
-              className="px-8 py-4 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/25 hover:translate-y-[-2px]"
+              className="px-8 py-4 rounded-xl bg-primary text-white font-bold hover:bg-primary/90 transition-all flex items-center gap-2 shadow-lg shadow-primary/25"
             >
               {siteConfig.cta.viewProjects} <ArrowRight size={20} />
-            </a>
-            <a
+            </motion.a>
+            <motion.a
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.5, delay: 1.0 }}
+              whileHover={{ scale: 1.05, y: -2 }}
+              whileTap={{ scale: 0.95 }}
               href="#contact"
-              className="px-8 py-4 rounded-xl bg-white/5 text-white font-bold border border-white/10 hover:bg-white/10 transition-all hover:translate-y-[-2px]"
+              className="px-8 py-4 rounded-xl bg-white/5 text-white font-bold border border-white/10 hover:bg-white/10 transition-all"
             >
               {siteConfig.cta.contactMe}
-            </a>
+            </motion.a>
           </div>
         </motion.div>
 

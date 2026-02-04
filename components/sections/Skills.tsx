@@ -32,7 +32,7 @@ export function Skills() {
         <motion.div
            initial={{ opacity: 0, y: 20 }}
            whileInView={{ opacity: 1, y: 0 }}
-           viewport={{ once: true }}
+           viewport={{ once: true, margin: "-100px" }}
         >
           <h2 className="text-4xl md:text-6xl font-bold text-white mb-6 tracking-tight">
             My <span className="text-primary">Arsenal</span>
@@ -47,7 +47,7 @@ export function Skills() {
         className="flex flex-col gap-16" 
         initial={{ opacity: 0, y: 30 }}
         whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true }}
+        viewport={{ once: true, margin: "-100px" }}
         transition={{ duration: 0.8, ease: "easeOut" }}
       >
           {/* We pass a fixed 'velocity' (pixels/sec approx) instead of duration */}

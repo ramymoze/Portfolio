@@ -9,26 +9,6 @@ export interface Project {
 
 export const projects: Project[] = [
   {
-    id: "fun-learning",
-    title: "FunLearning",
-    description: "An interactive educational platform designed to make learning engaging and fun. Features gamified lessons, progress tracking, and adaptive learning paths for an enhanced educational experience.",
-    tags: ["React Native", "Expo", "Supabase", "Education"],
-    link: "https://github.com/ramymoze/fun-learning",
-    images: ["/projects/fun-learning.png"],
-  },
-  {
-    id: "pneumonie-detection",
-    title: "Pneumonie Detection",
-    description: "Medical imaging application for pneumonia detection using TypeScript. Features advanced image processing and diagnostic capabilities.",
-    tags: ["TypeScript", "Medical Imaging", "AI", "Healthcare"],
-    link: "https://github.com/ramymoze/pneumoniedetection",
-    images: [
-      "/projects/pneumonia-detection-landing-page-.png",
-      "/projects/pneumonia-detection.png",
-      "/projects/pneumonia-detectionpng.png"
-    ],
-  },
-  {
     id: "oscawaves",
     title: "OSCAWaves",
     description: "A responsive landing page featuring 3D models and neon aesthetics. Built with modern web technologies and optimized for performance.",
@@ -46,8 +26,28 @@ export const projects: Project[] = [
       "/projects/droply-dashboard-landing-page-jpg.jpg",
       "/projects/droply-map.jpg",
       "/projects/droply.jpg",
-      "/projects/droplypage-.jpg",
+      "/projects/droplypagee-.jpg",
       "/projects/droplypagee.jpg"
+    ],
+  },
+  {
+    id: "fun-learning",
+    title: "FunLearning",
+    description: "An interactive educational platform designed to make learning engaging and fun. Features gamified lessons, progress tracking, and adaptive learning paths for an enhanced educational experience.",
+    tags: ["React Native", "Expo", "Supabase", "Education"],
+    link: "https://github.com/ramymoze/fun-learning",
+    images: ["/projects/fun-learning.png"],
+  },
+  {
+    id: "pneumonie-detection",
+    title: "Pneumonie Detection",
+    description: "Medical imaging application for pneumonia detection using TypeScript. Features advanced image processing and diagnostic capabilities.",
+    tags: ["TypeScript", "Medical Imaging", "AI", "Healthcare"],
+    link: "https://github.com/ramymoze/pneumoniedetection",
+    images: [
+      "/projects/pneumonia-detection-landing-page-.png",
+      "/projects/pneumonia-detection.png",
+      "/projects/pneumonia-detectionpng.png"
     ],
   },
   {

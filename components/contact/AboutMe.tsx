@@ -1,16 +1,20 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { Mail, Github, Download, FileText } from "lucide-react";
 import { personalInfo } from "@/data/personal-info";
 import { siteConfig } from "@/data/site-config";
+import { useRef } from "react";
 
 export function AboutMe() {
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: "-50px" });
+
   return (
     <motion.div
+       ref={ref}
        initial={{ opacity: 0, x: -50 }}
-       whileInView={{ opacity: 1, x: 0 }}
-       viewport={{ once: true }}
+       animate={inView ? { opacity: 1, x: 0 } : { opacity: 0, x: -50 }}
        className="bg-white/5 border border-white/10 p-8 md:p-12 rounded-3xl backdrop-blur-xl relative overflow-hidden"
     >
       <div className="absolute top-0 right-0 w-32 h-32 bg-primary/10 rounded-bl-full -mr-8 -mt-8" />
