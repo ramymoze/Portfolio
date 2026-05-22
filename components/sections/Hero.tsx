@@ -6,6 +6,7 @@ import { personalInfo } from "@/data/personal-info";
 import { siteConfig } from "@/data/site-config";
 import { FloatingCard } from "@/components/hero/FloatingCard";
 import { ProfileCodeBlock } from "@/components/hero/ProfileCodeBlock";
+import { MobileHeroVisual } from "@/components/hero/MobileHeroVisual";
 
 export function Hero() {
   return (
@@ -81,6 +82,9 @@ export function Hero() {
             </motion.a>
           </div>
         </motion.div>
+
+        {/* Mobile Visual */}
+        <MobileHeroVisual />
 
         {/* Right Column: Floating Tech Stack Visual */}
         <motion.div

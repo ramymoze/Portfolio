@@ -6,15 +6,15 @@ import { useEffect, useRef } from "react";
 
 const stats = [
   {
-    value: "7+",
-    label: "Months of Experience",
+    value: "1.5+",
+    label: "Years of Experience",
     icon: Briefcase,
     color: "text-blue-500",
     bg: "bg-blue-500/10",
     border: "border-blue-500/20",
   },
   {
-    value: "10+",
+    value: "15+",
     label: "Projects Completed",
     icon: Code,
     color: "text-primary",
@@ -35,7 +35,8 @@ function Counter({ value, inView }: { value: string; inView: boolean }) {
   const ref = useRef<HTMLHeadingElement>(null);
   const isPercentage = value.includes("%");
   const hasPlus = value.includes("+");
-  const numericValue = parseInt(value.replace(/[^0-9]/g, ""));
+  const numericValue = parseFloat(value.replace(/[^0-9.]/g, ""));
+  const isDecimal = value.includes(".");
 
   useEffect(() => {
     if (!inView || !ref.current) return;
@@ -45,14 +46,14 @@ function Counter({ value, inView }: { value: string; inView: boolean }) {
       ease: "easeOut",
       onUpdate(value) {
         if (ref.current) {
-          const displayValue = Math.floor(value);
+          const displayValue = isDecimal ? value.toFixed(1) : Math.floor(value);
           ref.current.textContent = `${displayValue}${hasPlus ? "+" : ""}${isPercentage ? "%" : ""}`;
         }
       },
     });
 
     return () => controls.stop();
-  }, [inView, numericValue, hasPlus, isPercentage]);
+  }, [inView, numericValue, hasPlus, isPercentage, isDecimal]);
 
   return (
     <h3 ref={ref} className="text-5xl font-bold text-white mb-2 tracking-tighter">
