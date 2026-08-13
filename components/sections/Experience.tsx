@@ -6,7 +6,7 @@ import { useEffect, useRef } from "react";
 
 const stats = [
   {
-    value: "1.5+",
+    value: "2+",
     label: "Years of Experience",
     icon: Briefcase,
     color: "text-blue-500",
